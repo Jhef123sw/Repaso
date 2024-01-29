@@ -1,0 +1,56 @@
+BoundedContext ProductCatalogManagementContext implements ProductCatalogManagementDomain
+BoundedContext CustomerManagementContext implements CustomerManagementDomain
+BoundedContext PaymentManagementContext implements PaymentManagementDomain
+BoundedContext OrdersManagementContext implements OrdersManagementDomain
+BoundedContext InventoryManagemenetContext implements InventoryManagementDomain
+BoundedContext ShippingManagementContext implements ShippingManagementDomain
+BoundedContext SecurityManagementContext implements SecurityManagementDomain
+
+
+ContextMap Prueba{
+    type SYSTEM_LANDSCAPE
+    state TO_BE
+
+    /*Agregando Bounded context a mi mapa de contexto*/
+    contains ProductCatalogManagementContext, CustomerManagementContext, OrdersManagementContext, InventoryManagemenetContext,ShippingManagementContext, SecurityManagementContext
+
+    /*Definiendo las relaciones entre bounded context*/
+    ProductCatalogManagementContext Partnership OrdersManagementContext
+    ProductCatalogManagementContext Customer-Supplier CustomerManagementContext
+    ProductCatalogManagementContext Shared-Kernel InventoryManagemenetContext
+    CustomerManagementContext [D, ACL] <- [U, OHS, PL] SecurityManagementContext
+    //OrdersManagementContext Customer-Supplier PaymentManagementContext
+    OrdersManagementContext Customer-Supplier ShippingManagementContext
+    SecurityManagementContext [U, OHS] -> [D, ACL] CustomerManagementContext
+    //InventoryManagemenetContext [D,CF] -
+
+}
+
+Domain Prueba{
+    Subdomain ProductCatalogManagementDomain{
+        type = CORE_DOMAIN
+        domainVisionStatement = "Gestion de catalogo de productos"
+    }
+    Subdomain CustomerManagementDomain{
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Gestion de los clientes"
+    }
+    Subdomain OrdersManagementDomain{
+        type = SUPPORTING_DOMAIN
+    }
+    Subdomain InventoryManagementDomain{
+        type = GENERIC_SUBDOMAIN
+    }
+
+    Subdomain PaymentManagementDomain{
+        type = GENERIC_SUBDOMAIN
+    }
+
+    Subdomain ShippingManagementDomain{
+        type = SUPPORTING_DOMAIN
+    }
+
+    Subdomain SecurityManagementDomain{
+        type = GENERIC_SUBDOMAIN
+    }
+}
